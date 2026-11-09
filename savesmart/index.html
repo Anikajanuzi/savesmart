@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SaveSmart</title>
+  <meta name="description" content="SaveSmart compares everyday grocery prices across stores in Mitrovica, Kosovo, so you can see the cheapest option and how much you save.">
+  <meta name="theme-color" content="#174D35">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-basket" viewBox="0 0 24 24"><path d="M5 9h14l-1.4 9.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8L5 9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9 12 4l3 5M3 9h18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 1 0-14 0C5 14.8 12 21 12 21Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.5a6.5 6.5 0 0 1 3.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4m0 0h11l-2 4 2 4H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- Demo notice -->
+<div class="demo-bar" role="note">
+  <div class="container demo-bar__inner">
+    <span class="demo-bar__tag">Demo data</span>
+    <span class="demo-bar__text">Example prices for Mitrovica, last updated <time id="data-updated">6 Nov 2026</time>. Not live store prices.</span>
+    <button class="link-btn" type="button" data-action="reset-demo">Reset demo data</button>
+  </div>
+</div>
+
+<!-- Navigation -->
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#home" class="brand" aria-label="SaveSmart home">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#174D35"/><path d="M9 19.5c1.4 1.7 3.8 2.6 6.6 2.6 3.4 0 5.6-1.5 5.6-3.9 0-2.2-1.6-3.1-5-3.8-2.6-.5-3.5-1-3.5-2 0-1 1-1.7 2.8-1.7 1.6 0 2.9.6 3.8 1.6" fill="none" stroke="#DCE9DC" stroke-width="2.4" stroke-linecap="round"/><path d="M16 7.5v3M16 22v2.5" stroke="#83A98B" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand__name">SaveSmart</span>
+    </a>
+
+    <nav class="nav__links" id="nav-links" aria-label="Main">
+      <a href="#home" class="nav__link" data-section="home">Home</a>
+      <a href="#compare" class="nav__link" data-section="compare">Compare Prices</a>
+      <a href="#basket" class="nav__link" data-section="basket">Shopping Basket</a>
+      <a href="#budget" class="nav__link" data-section="budget">Budget Tracker</a>
+      <a href="#stores" class="nav__link" data-section="stores">Store Map</a>
+      <a href="#community" class="nav__link" data-section="community">Community</a>
+      <span class="nav__indicator" aria-hidden="true"></span>
+    </nav>
+
+    <div class="nav__actions">
+      <span class="city-pill" title="SaveSmart currently covers Mitrovica"><svg class="ico"><use href="#i-pin"/></svg> Mitrovica</span>
+      <a href="#basket" class="basket-btn" aria-label="Shopping basket">
+        <svg class="ico"><use href="#i-basket"/></svg>
+        <span class="basket-btn__count" id="basket-count" aria-live="polite">0</span>
+      </a>
+      <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <svg class="ico"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="home" data-observe>
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow reveal" style="--d:0">Price comparison for Mitrovica</p>
+        <h1 class="hero__title reveal" style="--d:1">Spend Smarter. <span>Save More.</span></h1>
+        <p class="hero__lead reveal" style="--d:2">Compare everyday prices across your favorite stores and discover how much you could save on every shopping trip.</p>
+
+        <form class="hero-search reveal" style="--d:3" id="hero-search" role="search">
+          <label for="hero-search-input" class="sr-only">Search products</label>
+          <svg class="ico hero-search__icon"><use href="#i-search"/></svg>
+          <input id="hero-search-input" type="search" placeholder="Search milk, coffee, detergent…" autocomplete="off">
+          <button class="btn-primary" type="submit">Search</button>
+        </form>
+
+        <div class="hero__ctas reveal" style="--d:4">
+          <a href="#compare" class="btn-secondary">Explore products <svg class="ico"><use href="#i-arrow"/></svg></a>
+          <div class="hero__quick" id="hero-quick" aria-label="Popular searches"></div>
+        </div>
+
+        <dl class="hero-stats reveal" style="--d:5">
+          <div>
+            <dt>Potential saving on a typical basket</dt>
+            <dd><span class="counter" id="hero-saving">€0.00</span></dd>
+          </div>
+          <div>
+            <dt>Products compared</dt>
+            <dd id="hero-products">0</dd>
+          </div>
+          <div>
+            <dt>Stores in Mitrovica</dt>
+            <dd id="hero-stores">0</dd>
+          </div>
+        </dl>
+        <p class="hero__note reveal" style="--d:6">Saving = most expensive vs. cheapest store for a typical 8-item basket, using example prices.</p>
+      </div>
+
+      <div class="hero__visual reveal" style="--d:3" aria-hidden="true">
+        <div class="compare-preview" id="hero-preview"></div>
+        <div class="receipt-chip">
+          <svg class="ico"><use href="#i-check"/></svg>
+          <div><strong id="hero-chip-title">Best price found</strong><span id="hero-chip-sub">—</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CATALOG ================= -->
+  <section class="section section--catalog" id="compare" data-observe>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Compare prices</p>
+          <h2 class="section-heading">Everyday essentials, side by side</h2>
+          <p class="section-description">Find the lowest price for the same product across stores in Mitrovica. Open any product to see every store's price, price per unit and the gap between cheapest and most expensive.</p>
+        </div>
+        <span class="data-chip"><svg class="ico"><use href="#i-info"/></svg> Example prices</span>
+      </div>
+
+      <div class="toolbar card-flat">
+        <div class="toolbar__search">
+          <svg class="ico"><use href="#i-search"/></svg>
+          <label for="catalog-search" class="sr-only">Search by product name or brand</label>
+          <input id="catalog-search" class="input-field" type="search" placeholder="Search by product or brand" autocomplete="off">
+        </div>
+        <div class="toolbar__selects">
+          <label class="select-wrap">
+            <span class="sr-only">Filter by store</span>
+            <select id="catalog-store" class="input-field"></select>
+          </label>
+          <label class="select-wrap">
+            <span class="sr-only">Sort products</span>
+            <select id="catalog-sort" class="input-field">
+              <option value="featured">Sort: Featured</option>
+              <option value="price-asc">Lowest price</option>
+              <option value="price-desc">Highest price</option>
+              <option value="name">Alphabetical (A–Z)</option>
+              <option value="savings">Biggest potential savings</option>
+            </select>
+          </label>
+          <button class="btn-ghost" type="button" id="catalog-clear">Clear filters</button>
+        </div>
+      </div>
+
+      <div class="chips-scroll">
+        <div class="chips" id="catalog-categories" role="tablist" aria-label="Categories"></div>
+      </div>
+
+      <div class="catalog-meta">
+        <p id="catalog-count" aria-live="polite">—</p>
+        <p class="muted small">Prices in EUR · tap a product to compare all stores</p>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+
+      <div class="empty-state" id="catalog-empty" hidden>
+        <svg class="ico"><use href="#i-search"/></svg>
+        <h3>No products match these filters</h3>
+        <p class="muted">Try a different search term or clear the filters.</p>
+        <button class="btn-secondary" type="button" data-action="clear-filters">Clear filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BASKET ================= -->
+  <section class="section section--alt" id="basket" data-observe>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Shopping basket</p>
+          <h2 class="section-heading">Where is your whole basket cheapest?</h2>
+          <p class="section-description">Add products and SaveSmart totals the basket at every store. Stores that don't list an item are flagged instead of being counted as free.</p>
+        </div>
+      </div>
+
+      <div class="basket-layout">
+        <div class="panel basket-panel">
+          <div class="panel__head">
+            <h3>Your basket <span class="muted" id="basket-summary-count"></span></h3>
+            <button class="link-btn" type="button" id="basket-clear" hidden>Clear basket</button>
+          </div>
+          <ul class="basket-list" id="basket-list"></ul>
+          <div class="empty-state empty-state--compact" id="basket-empty">
+            <svg class="ico"><use href="#i-basket"/></svg>
+            <h3>Your basket is empty</h3>
+            <p class="muted">Add products from the catalog, or load an example basket to see how the optimizer works.</p>
+            <div class="row-gap">
+              <a class="btn-primary" href="#compare">Browse products</a>
+              <button class="btn-secondary" type="button" id="basket-sample">Load example basket</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel optimizer" id="optimizer">
+          <div class="panel__head">
+            <h3>Store comparison</h3>
+            <span class="data-chip data-chip--sm">Example prices</span>
+          </div>
+          <div id="optimizer-body">
+            <p class="muted">Add at least one product to compare basket totals across stores.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BUDGET ================= -->
+  <section class="section" id="budget" data-observe>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Budget tracker</p>
+          <h2 class="section-heading">Keep grocery spending on plan</h2>
+          <p class="section-description">Set a monthly grocery budget, log what you spend and see where the month is heading. Saved in this browser only.</p>
+        </div>
+        <div class="month-label" id="budget-month">—</div>
+      </div>
+
+      <div class="kpis" id="budget-kpis"></div>
+
+      <div class="panel budget-progress">
+        <div class="budget-progress__top">
+          <div>
+            <p class="label">Budget used</p>
+            <p class="budget-progress__pct"><span id="budget-pct">0%</span> <span class="status-pill" id="budget-status">On track</span></p>
+          </div>
+          <form class="budget-edit" id="budget-form" novalidate>
+            <label for="budget-input" class="label">Monthly budget (€)</label>
+            <div class="row-gap">
+              <input id="budget-input" class="input-field" type="number" min="1" step="1" inputmode="decimal">
+              <button class="btn-secondary" type="submit">Update</button>
+            </div>
+            <p class="field-error" id="budget-error" hidden></p>
+          </form>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="budget-bar">
+          <span class="progress__fill" id="budget-fill"></span>
+          <span class="progress__pace" id="budget-pace" title="Where spending would be if spread evenly through the month"></span>
+        </div>
+        <p class="muted small" id="budget-pace-text"></p>
+      </div>
+
+      <div class="budget-grid">
+        <div class="panel chart-panel">
+          <div class="panel__head">
+            <h3>Spending this month</h3>
+            <span class="muted small">Cumulative vs. budget</span>
+          </div>
+          <div class="chart-box"><canvas id="chart-cumulative" aria-label="Cumulative spending chart"></canvas></div>
+        </div>
+        <div class="panel chart-panel">
+          <div class="panel__head">
+            <h3>By store</h3>
+            <span class="muted small">This month</span>
+          </div>
+          <div class="chart-box chart-box--sm"><canvas id="chart-stores" aria-label="Spending by store chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="budget-grid budget-grid--reverse">
+        <div class="panel">
+          <div class="panel__head"><h3>Add an expense</h3></div>
+          <form id="expense-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="exp-amount">Amount (€)</label>
+              <input id="exp-amount" class="input-field" type="number" step="0.01" min="0.01" inputmode="decimal" placeholder="0.00">
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="exp-date">Date</label>
+              <input id="exp-date" class="input-field" type="date">
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="exp-store">Store</label>
+              <select id="exp-store" class="input-field"></select>
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="exp-note">Note <span class="muted">(optional)</span></label>
+              <input id="exp-note" class="input-field" type="text" maxlength="60" placeholder="Weekly shop">
+            </div>
+            <button class="btn-primary field--full" type="submit"><svg class="ico"><use href="#i-plus"/></svg> Add expense</button>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel__head">
+            <h3>Expense history</h3>
+            <span class="muted small" id="expense-count"></span>
+          </div>
+          <ul class="expense-list" id="expense-list"></ul>
+          <div class="empty-state empty-state--compact" id="expense-empty" hidden>
+            <h3>No expenses this month</h3>
+            <p class="muted">Add your first grocery expense to start tracking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STORE MAP ================= -->
+  <section class="section section--alt" id="stores" data-observe>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Store map</p>
+          <h2 class="section-heading">Participating stores in Mitrovica</h2>
+          <p class="section-description">See which stores are cheapest on average and jump straight to their products.</p>
+        </div>
+        <label class="select-wrap city-select">
+          <span class="sr-only">City</span>
+          <select id="city-select" class="input-field"></select>
+        </label>
+      </div>
+
+      <div class="notice">
+        <svg class="ico"><use href="#i-info"/></svg>
+        <p><strong>Store locations not yet verified.</strong> Markers are placeholders arranged around the city centre, not real store positions. Addresses will appear once confirmed.</p>
+      </div>
+
+      <div class="map-layout">
+        <div class="panel map-panel">
+          <div id="map" class="map" role="region" aria-label="Map of participating stores"></div>
+          <p class="map-fallback" id="map-fallback" hidden></p>
+        </div>
+        <ul class="store-list" id="store-list"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMMUNITY ================= -->
+  <section class="section" id="community" data-observe>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Community</p>
+          <h2 class="section-heading">Spotted a new price? Report it.</h2>
+          <p class="section-description">Reports help keep prices current. Every report stays <strong>unverified</strong> until it is checked, so it never replaces a listed price automatically.</p>
+        </div>
+      </div>
+
+      <div class="community-layout">
+        <div class="panel">
+          <div class="panel__head"><h3>Submit a price</h3></div>
+          <form id="report-form" class="form-grid" novalidate>
+            <div class="field field--full">
+              <label for="rep-product">Product name</label>
+              <input id="rep-product" class="input-field" type="text" list="rep-product-list" placeholder="e.g. Fresh Milk 3.2%" autocomplete="off">
+              <datalist id="rep-product-list"></datalist>
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="rep-store">Store</label>
+              <select id="rep-store" class="input-field"></select>
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="rep-price">Price (€)</label>
+              <input id="rep-price" class="input-field" type="number" step="0.01" min="0.01" inputmode="decimal" placeholder="0.00">
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="rep-qty">Size or quantity</label>
+              <input id="rep-qty" class="input-field" type="text" placeholder="e.g. 1 L, 500 g">
+              <p class="field-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="rep-date">Date observed</label>
+              <input id="rep-date" class="input-field" type="date">
+              <p class="field-error" hidden></p>
+            </div>
+            <p class="muted small field--full" id="rep-hint">Pick a product from the list to compare against its current listed price.</p>
+            <button class="btn-primary field--full" type="submit">Submit price report</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <h3>Recent activity</h3>
+            <div class="feed-stats" id="feed-stats"></div>
+          </div>
+          <ul class="feed" id="feed"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div>
+      <a href="#home" class="brand brand--footer">
+        <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#DCE9DC"/><path d="M9 19.5c1.4 1.7 3.8 2.6 6.6 2.6 3.4 0 5.6-1.5 5.6-3.9 0-2.2-1.6-3.1-5-3.8-2.6-.5-3.5-1-3.5-2 0-1 1-1.7 2.8-1.7 1.6 0 2.9.6 3.8 1.6" fill="none" stroke="#174D35" stroke-width="2.4" stroke-linecap="round"/><path d="M16 7.5v3M16 22v2.5" stroke="#236B49" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+        <span class="brand__name">SaveSmart</span>
+      </a>
+      <p class="footer__text">Helping people in Kosovo compare everyday prices and make smarter decisions with their money. Starting in Mitrovica.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#compare">Compare prices</a></li>
+        <li><a href="#basket">Shopping basket</a></li>
+        <li><a href="#budget">Budget tracker</a></li>
+        <li><a href="#stores">Store map</a></li>
+        <li><a href="#community">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>About the data</h4>
+      <p class="footer__text">This is a demonstration. All prices are example values, not live or verified store prices. There is no real-time connection to any store. Community reports are unverified.</p>
+      <button class="link-btn link-btn--light" type="button" data-action="reset-demo"><svg class="ico"><use href="#i-reset"/></svg> Reset demo data</button>
+    </div>
+  </div>
+  <div class="container footer__base">
+    <span>© 2026 SaveSmart · Mitrovica, Kosovo</span>
+    <span>Map data © OpenStreetMap contributors</span>
+  </div>
+</footer>
+
+<!-- Compare modal -->
+<div class="modal" id="compare-modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cmp-title">
+    <button class="icon-btn modal__close" type="button" data-close aria-label="Close"><svg class="ico"><use href="#i-x"/></svg></button>
+    <div id="compare-body"></div>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal" id="confirm-modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__dialog modal__dialog--sm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <h3 id="confirm-title">Reset demo data?</h3>
+    <p id="confirm-text" class="muted">This clears your basket, budget, expenses and price reports in this browser and restores the example data.</p>
+    <div class="row-gap row-gap--end">
+      <button class="btn-ghost" type="button" data-close>Cancel</button>
+      <button class="btn-danger" type="button" id="confirm-ok">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<!-- Libraries (vendored, no CDN required) -->
+<script src="vendor/chart.umd.min.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
+
+<!-- App -->
+<script src="js/data.js"></script>
+<script src="js/art.js"></script>
+<script src="js/core.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/basket.js"></script>
+<script src="js/budget.js"></script>
+<script src="js/map.js"></script>
+<script src="js/community.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
