@@ -1,9 +1,8 @@
 /* ==========================================================================
    SaveSmart — store map (Leaflet + OpenStreetMap)
-   Store coordinates are not verified yet, so every store without a verified
-   location is drawn at a clearly labelled placeholder position arranged in
-   a ring around the city centre. Set `location.verified = true` with real
-   lat/lng in data.js and the marker moves to the real spot automatically.
+   Stores with `location.verified = true` are drawn at their real lat/lng.
+   Any store without coordinates falls back to a labelled placeholder
+   position arranged in a ring around the city centre.
    ========================================================================== */
 (function () {
   "use strict";
@@ -13,7 +12,7 @@
   let map = null;
   const markers = {};
   let activeId = null;
-  let city = DATA.cities.find((c) => c.id === storage.get("city", "mitrovica") && c.active) || DATA.cities[0];
+  const city = DATA.cities.find((c) => c.active) || DATA.cities[0];
 
   /* ---------- Per-store price stats ---------- */
   function storeStats(storeId) {
@@ -50,8 +49,11 @@
     return `
       <div class="popup">
         <h4>${escapeHtml(store.name)}</h4>
-        ${placeholder ? `<span class="status-pill status-pill--warning">Placeholder location</span>` : `<span class="status-pill">Verified location</span>`}
+        ${placeholder ? `<span class="status-pill status-pill--warning">Placeholder location</span>` : ""}
         <p><b>Address:</b> ${store.address ? escapeHtml(store.address) : "Not verified yet"}</p>
+        ${store.hours ? `<p><b>Hours:</b> ${escapeHtml(store.hours)}</p>` : ""}
+        ${store.phone ? `<p><b>Phone:</b> <a href="tel:${store.phone.replace(/\s/g, "")}">${escapeHtml(store.phone)}</a></p>` : ""}
+        ${placeholder ? "" : `<p><a href="https://www.google.com/maps/dir/?api=1&destination=${store.location.lat},${store.location.lng}" target="_blank" rel="noopener">Get directions</a></p>`}
         <p><b>${stats.listed}</b> of ${DATA.products.length} products listed · cheapest on <b>${stats.cheapest}</b></p>
         <p>On average ${stats.avgPremium < 0.5 ? "at the lowest price" : `<b>${pct(stats.avgPremium, 1)}</b> above the lowest price`}</p>
         <p class="muted" style="font-size:0.78rem">Example prices · updated ${shortDate(stats.latest)}</p>
@@ -69,7 +71,7 @@
         <span class="store-badge">${store.initials}</span>
         <div style="min-width:0">
           <div class="store-item__name">${escapeHtml(store.name)}</div>
-          <div class="store-item__meta">${store.location.verified ? escapeHtml(store.address || "Address pending") : "Location not verified"} · cheapest on ${stats.cheapest}</div>
+          <div class="store-item__meta">${store.location.verified ? escapeHtml(store.address || "Address pending") : "Location not verified"}${store.hours ? " · " + escapeHtml(store.hours) : ""} · cheapest on ${stats.cheapest}</div>
         </div>
         <div class="store-item__index${stats.avgPremium === minPremium ? " is-low" : ""}">
           <b>${stats.avgPremium < 0.5 ? "Lowest" : "+" + pct(stats.avgPremium, 1)}</b>
@@ -100,17 +102,10 @@
         failed++;
         if (!loaded && failed >= 4) {
           els.fallback.hidden = false;
-          els.fallback.textContent = "Map tiles couldn't load here (offline or blocked). Store markers are still shown at their placeholder positions.";
+          els.fallback.textContent = "Map tiles couldn't load here (offline or blocked). Use the store list to browse stores.";
         }
       })
       .addTo(map);
-
-    // Placeholder ring + centre label so the layout reads as schematic.
-    L.circle(city.center, { radius: 750, color: "#83A98B", weight: 1.5, dashArray: "6 6", fill: true, fillColor: "#DCE9DC", fillOpacity: 0.18, interactive: false }).addTo(map);
-    L.marker(city.center, {
-      interactive: false,
-      icon: L.divIcon({ className: "", html: `<span class="map-center-label" style="display:inline-block;transform:translate(-50%,-50%)">${escapeHtml(city.name)} centre</span>`, iconSize: null })
-    }).addTo(map);
 
     const stores = DATA.stores.filter((s) => s.cityId === city.id);
     stores.forEach((store, i) => {
@@ -130,6 +125,10 @@
       marker.on("popupopen", () => setActive(store.id));
       markers[store.id] = marker;
     });
+
+    // Zoom so every store is visible.
+    const all = Object.values(markers).map((m) => m.getLatLng());
+    if (all.length > 1) map.fitBounds(L.latLngBounds(all), { padding: [30, 30], maxZoom: 15 });
 
     // Fix sizing if the map container changes (e.g. resize, layout shift).
     if ("ResizeObserver" in window) new ResizeObserver(() => map.invalidateSize()).observe(els.map);
@@ -162,14 +161,6 @@
     els.map = $("#map");
     els.list = $("#store-list");
     els.fallback = $("#map-fallback");
-    const citySelect = $("#city-select");
-    citySelect.innerHTML = DATA.cities.filter((c) => c.active).map((c) =>
-      `<option value="${c.id}" ${c.id === city.id ? "selected" : ""}>${escapeHtml(c.name)}</option>`).join("");
-    citySelect.addEventListener("change", () => {
-      const next = DATA.cities.find((c) => c.id === citySelect.value);
-      if (next && next.active) { city = next; storage.set("city", city.id); }
-    });
-
     renderList();
     buildMap();
 

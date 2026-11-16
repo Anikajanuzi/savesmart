@@ -44,13 +44,16 @@ window.SS_DATA = {
    *   address: "Rr. ..., Mitrovicë"
    */
   stores: [
-    { id: "interex",          name: "Interex",          initials: "IX", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "meridian-express", name: "Meridian Express", initials: "ME", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "premium-store",    name: "Premium Store",    initials: "PS", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "emona-center",     name: "Emona Center",     initials: "EC", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "bamex",            name: "Bamex",            initials: "BX", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "florenti",         name: "Florenti",         initials: "FL", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } },
-    { id: "durmart",          name: "Durmart",          initials: "DM", cityId: "mitrovica", address: null, location: { lat: null, lng: null, verified: false } }
+    { id: "interex", name: "Interex", initials: "IX", cityId: "mitrovica", address: "Rr. Agim Ramadani, Mitrovicë", hours: "Daily 08:00–23:00", phone: "+383 48 160 311", location: { lat: 42.893139, lng: 20.8734544, verified: true } },
+    { id: "meridian-express", name: "Meridian Express", initials: "ME", cityId: "mitrovica", address: "Rr. Shemsi Ahmeti, Mitrovicë", hours: "Daily 07:00–23:00", phone: "+383 49 770 356", location: { lat: 42.8883891, lng: 20.871526, verified: true } },
+    { id: "premium-store", name: "Premium Market", initials: "PM", cityId: "mitrovica", address: "Rr. Afrim Zhitia 23, Mitrovicë", hours: null, phone: null, location: { lat: 42.8888977, lng: 20.8676095, verified: true } },
+    { id: "emona-center", name: "Emona Center", initials: "EC", cityId: "mitrovica", address: "Rr. Agim Hajrizi, Mitrovicë", hours: "Daily 08:00–23:00", phone: null, location: { lat: 42.8895898, lng: 20.8693489, verified: true } },
+    { id: "bamex", name: "Hipermarket Bamex", initials: "BX", cityId: "mitrovica", address: "Mitrovicë", hours: "Daily 08:00–23:00", phone: null, location: { lat: 42.8804352, lng: 20.8532715, verified: true } },
+    { id: "florenti", name: "Mega Market Florenti", initials: "FL", cityId: "mitrovica", address: "Qendra, Mitrovicë", hours: "Open 24 hours", phone: null, location: { lat: 42.8914161, lng: 20.8659433, verified: true } },
+    { id: "durmart", name: "Durmart", initials: "DM", cityId: "mitrovica", address: "Rr. Dëshmorët e Kombit, Mitrovicë", hours: "Daily 08:00–22:00", phone: "+383 49 273 045", location: { lat: 42.8636523, lng: 20.8493057, verified: true } },
+    { id: "etc", name: "ETC Elkos Trading Center", initials: "ET", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: "Daily 08:00–22:30", phone: "+383 800 30300", location: { lat: 42.8946075, lng: 20.8736138, verified: true } },
+    { id: "viva-fresh", name: "Viva Fresh Store", initials: "VF", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: null, phone: null, location: { lat: 42.8924992, lng: 20.8723682, verified: true } },
+    { id: "brvnara", name: "Brvnara Market", initials: "BR", cityId: "mitrovica", address: "Rr. Mbreti Petri I, Mitrovicë (North)", hours: "Daily 07:30–23:00", phone: null, location: { lat: 42.8962991, lng: 20.864687, verified: true } }
   ],
 
   /*
@@ -76,6 +79,24 @@ window.SS_DATA = {
         "label": "MILK"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.09,
@@ -138,6 +159,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 1.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 1.34,
           "updatedAt": "2026-11-06",
@@ -192,6 +231,24 @@ window.SS_DATA = {
         "label": "EGGS"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 2.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 2.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.39,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.99,
@@ -254,6 +311,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 0.47,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 0.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 0.53,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 0.49,
           "updatedAt": "2026-11-06",
@@ -314,6 +389,24 @@ window.SS_DATA = {
         "label": "PASTA"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.24,
@@ -376,6 +469,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 1.59,
           "updatedAt": "2026-11-06",
@@ -430,6 +541,24 @@ window.SS_DATA = {
         "label": "OIL"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.94,
@@ -492,6 +621,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 0.94,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 0.94,
           "updatedAt": "2026-11-06",
@@ -552,6 +699,24 @@ window.SS_DATA = {
         "label": "FLOUR"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 0.75,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 0.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 0.87,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 0.79,
@@ -614,6 +779,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 2.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 2.99,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.99,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 2.84,
           "updatedAt": "2026-11-06",
@@ -668,6 +851,24 @@ window.SS_DATA = {
         "label": "COLA"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.54,
@@ -730,6 +931,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 0.33,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 0.35,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 0.36,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 0.34,
           "updatedAt": "2026-11-06",
@@ -791,6 +1010,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 1.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 1.44,
           "updatedAt": "2026-11-06",
@@ -846,6 +1083,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 6.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 6.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 6.99,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 6.49,
           "updatedAt": "2026-11-06",
@@ -900,6 +1155,24 @@ window.SS_DATA = {
         "label": "TEA"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.39,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.24,
@@ -962,6 +1235,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 11.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 11.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 12.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 10.59,
           "updatedAt": "2026-11-06",
@@ -1022,6 +1313,24 @@ window.SS_DATA = {
         "label": "DISH"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 2.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 2.39,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 2.24,
@@ -1084,6 +1393,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 3.99,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 4.39,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 4.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 4.24,
           "updatedAt": "2026-11-06",
@@ -1145,6 +1472,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 1.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 1.59,
           "updatedAt": "2026-11-06",
@@ -1199,6 +1544,24 @@ window.SS_DATA = {
         "label": "PASTE"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.99,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.89,
@@ -1261,6 +1624,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 4.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 4.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 4.89,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 4.19,
           "updatedAt": "2026-11-06",
@@ -1315,6 +1696,24 @@ window.SS_DATA = {
         "label": "GEL"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 2.49,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 2.59,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 2.49,
@@ -1377,6 +1776,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 1.24,
           "updatedAt": "2026-11-06",
@@ -1431,6 +1848,24 @@ window.SS_DATA = {
         "label": "CHOCO"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.29,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.19,
@@ -1493,6 +1928,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 2.39,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 2.69,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 2.79,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 2.29,
           "updatedAt": "2026-11-06",
@@ -1554,6 +2007,24 @@ window.SS_DATA = {
       },
       "prices": [
         {
+          "storeId": "etc",
+          "price": 0.84,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 0.88,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 0.96,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
           "storeId": "interex",
           "price": 0.89,
           "updatedAt": "2026-11-06",
@@ -1614,6 +2085,24 @@ window.SS_DATA = {
         "label": "PEANUT"
       },
       "prices": [
+        {
+          "storeId": "etc",
+          "price": 1.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "viva-fresh",
+          "price": 1.09,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
+        {
+          "storeId": "brvnara",
+          "price": 1.19,
+          "updatedAt": "2026-11-06",
+          "source": "demo"
+        },
         {
           "storeId": "interex",
           "price": 1.14,
