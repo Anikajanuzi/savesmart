@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/savesmart", "destination": "/", "permanent": false },
+    { "source": "/savesmart/:path*", "destination": "/:path*", "permanent": false }
+  ]
+}
