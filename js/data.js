@@ -44,16 +44,16 @@ window.SS_DATA = {
    *   address: "Rr. ..., Mitrovicë"
    */
   stores: [
-    { id: "interex", name: "Interex", initials: "IX", cityId: "mitrovica", address: "Rr. Agim Ramadani, Mitrovicë", hours: "Daily 08:00–23:00", phone: "+383 48 160 311", location: { lat: 42.893139, lng: 20.8734544, verified: true } },
-    { id: "meridian-express", name: "Meridian Express", initials: "ME", cityId: "mitrovica", address: "Rr. Shemsi Ahmeti, Mitrovicë", hours: "Daily 07:00–23:00", phone: "+383 49 770 356", location: { lat: 42.8883891, lng: 20.871526, verified: true } },
-    { id: "premium-store", name: "Premium Market", initials: "PM", cityId: "mitrovica", address: "Rr. Afrim Zhitia 23, Mitrovicë", hours: null, phone: null, location: { lat: 42.8888977, lng: 20.8676095, verified: true } },
-    { id: "emona-center", name: "Emona Center", initials: "EC", cityId: "mitrovica", address: "Rr. Agim Hajrizi, Mitrovicë", hours: "Daily 08:00–23:00", phone: null, location: { lat: 42.8895898, lng: 20.8693489, verified: true } },
-    { id: "bamex", name: "Hipermarket Bamex", initials: "BX", cityId: "mitrovica", address: "Mitrovicë", hours: "Daily 08:00–23:00", phone: null, location: { lat: 42.8804352, lng: 20.8532715, verified: true } },
-    { id: "florenti", name: "Mega Market Florenti", initials: "FL", cityId: "mitrovica", address: "Qendra, Mitrovicë", hours: "Open 24 hours", phone: null, location: { lat: 42.8914161, lng: 20.8659433, verified: true } },
-    { id: "durmart", name: "Durmart", initials: "DM", cityId: "mitrovica", address: "Rr. Dëshmorët e Kombit, Mitrovicë", hours: "Daily 08:00–22:00", phone: "+383 49 273 045", location: { lat: 42.8636523, lng: 20.8493057, verified: true } },
-    { id: "etc", name: "ETC Elkos Trading Center", initials: "ET", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: "Daily 08:00–22:30", phone: "+383 800 30300", location: { lat: 42.8946075, lng: 20.8736138, verified: true } },
-    { id: "viva-fresh", name: "Viva Fresh Store", initials: "VF", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: null, phone: null, location: { lat: 42.8924992, lng: 20.8723682, verified: true } },
-    { id: "brvnara", name: "Brvnara Market", initials: "BR", cityId: "mitrovica", address: "Rr. Mbreti Petri I, Mitrovicë (North)", hours: "Daily 07:30–23:00", phone: null, location: { lat: 42.8962991, lng: 20.864687, verified: true } }
+    { id: "interex", name: "Interex", initials: "IX", cityId: "mitrovica", address: "Rr. Agim Ramadani, Mitrovicë", hours: "Daily 08:00–23:00", phone: "+383 48 160 311", placeId: "ChIJX58HIb9FUxMR6YBTh2cJYao", location: { lat: 42.893139, lng: 20.8734544, verified: true } },
+    { id: "meridian-express", name: "Meridian Express", initials: "ME", cityId: "mitrovica", address: "Rr. Shemsi Ahmeti, Mitrovicë", hours: "Daily 07:00–23:00", phone: "+383 49 770 356", placeId: "ChIJFezmQxNFUxMRLmCpRoztMNw", location: { lat: 42.8883891, lng: 20.871526, verified: true } },
+    { id: "premium-store", name: "Premium Market", initials: "PM", cityId: "mitrovica", address: "Rr. Afrim Zhitia 23, Mitrovicë", hours: null, phone: null, placeId: "ChIJ4crhEwBFUxMRVF3c6BdJMgM", location: { lat: 42.8888977, lng: 20.8676095, verified: true } },
+    { id: "emona-center", name: "Emona Center", initials: "EC", cityId: "mitrovica", address: "Rr. Agim Hajrizi, Mitrovicë", hours: "Daily 08:00–23:00", phone: null, placeId: "ChIJNbXBzRJFUxMRztsR191Fc3M", location: { lat: 42.8895898, lng: 20.8693489, verified: true } },
+    { id: "bamex", name: "Hipermarket Bamex", initials: "BX", cityId: "mitrovica", address: "Mitrovicë", hours: "Daily 08:00–23:00", phone: null, placeId: "ChIJ-wh1iEdFUxMRsi97Idy4lsE", location: { lat: 42.8804352, lng: 20.8532715, verified: true } },
+    { id: "florenti", name: "Mega Market Florenti", initials: "FL", cityId: "mitrovica", address: "Qendra, Mitrovicë", hours: "Open 24 hours", phone: null, placeId: "ChIJ0-O68A9FUxMRh8mEbZN0oXs", location: { lat: 42.8914161, lng: 20.8659433, verified: true } },
+    { id: "durmart", name: "Durmart", initials: "DM", cityId: "mitrovica", address: "Rr. Dëshmorët e Kombit, Mitrovicë", hours: "Daily 08:00–22:00", phone: "+383 49 273 045", placeId: "ChIJuxO7ellEUxMR_U_jo62WovI", location: { lat: 42.8636523, lng: 20.8493057, verified: true } },
+    { id: "etc", name: "ETC Elkos Trading Center", initials: "ET", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: "Daily 08:00–22:30", phone: "+383 800 30300", placeId: "ChIJVeZDSWlFUxMRFAhA0qrWcRk", location: { lat: 42.8946075, lng: 20.8736138, verified: true } },
+    { id: "viva-fresh", name: "Viva Fresh Store", initials: "VF", cityId: "mitrovica", address: "Rr. Bislim Bajgora, Mitrovicë", hours: null, phone: null, placeId: "ChIJq15sAABFUxMRRZEfBlR2kYI", location: { lat: 42.8924992, lng: 20.8723682, verified: true } },
+    { id: "brvnara", name: "Brvnara Market", initials: "BR", cityId: "mitrovica", address: "Rr. Mbreti Petri I, Mitrovicë (North)", hours: "Daily 07:30–23:00", phone: null, placeId: "ChIJxyxCmXFFUxMRAwQB4qv6aE8", location: { lat: 42.8962991, lng: 20.864687, verified: true } }
   ],
 
   /*

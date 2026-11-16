@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -330,13 +329,13 @@
 
       <div class="notice">
         <svg class="ico"><use href="#i-info"/></svg>
-        <p><strong>Real store locations, example prices.</strong> Stores are shown where they are in Mitrovica. Prices are still examples, not live store prices. Tap a store for its address, hours and directions.</p>
+        <p><strong>Real store locations, example prices.</strong> Stores are shown where they are in Mitrovica. Prices are still examples, not live store prices. Pick a store to see it on Google Maps and get directions.</p>
       </div>
 
       <div class="map-layout">
         <div class="panel map-panel">
-          <div id="map" class="map" role="region" aria-label="Map of participating stores"></div>
-          <p class="map-fallback" id="map-fallback" hidden></p>
+          <iframe id="map-frame" class="map-frame" title="Google Map of supermarkets in Mitrovica" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <div class="map-details" id="map-details" aria-live="polite"></div>
         </div>
         <ul class="store-list" id="store-list"></ul>
       </div>
@@ -459,7 +458,6 @@
 
 <!-- Libraries (vendored, no CDN required) -->
 <script src="vendor/chart.umd.min.js"></script>
-<script src="vendor/leaflet/leaflet.js"></script>
 
 <!-- App -->
 <script src="js/data.js"></script>

@@ -1,16 +1,15 @@
 /* ==========================================================================
-   SaveSmart — store map (Leaflet + OpenStreetMap)
-   Stores with `location.verified = true` are drawn at their real lat/lng.
-   Any store without coordinates falls back to a labelled placeholder
-   position arranged in a ring around the city centre.
+   SaveSmart — store map (Google Maps)
+   Uses a Google Maps embed (no API key needed). The map starts on an
+   overview of supermarkets in Mitrovica; choosing a store zooms the map to
+   that store and shows its details with links to open it in Google Maps.
+   Each store's `placeId` in data.js links to its real Google Maps listing.
    ========================================================================== */
 (function () {
   "use strict";
-  const { DATA, $, escapeHtml, pct, shortDate, productStats, priceAt, storage } = SS;
+  const { DATA, $, escapeHtml, pct, shortDate, productStats, priceAt } = SS;
 
   const els = {};
-  let map = null;
-  const markers = {};
   let activeId = null;
   const city = DATA.cities.find((c) => c.active) || DATA.cities[0];
 
@@ -30,34 +29,59 @@
     return { listed, cheapest, avgPremium: listed ? premiumSum / listed : 0, latest };
   }
 
-  /** Real coordinates when verified, otherwise an evenly spaced placeholder ring. */
-  function positionFor(store, index, total) {
-    if (store.location && store.location.verified && store.location.lat != null) {
-      return { lat: store.location.lat, lng: store.location.lng, placeholder: false };
-    }
-    const [clat, clng] = city.center;
-    const r = 0.0068; // ~750 m
-    const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
-    return {
-      lat: clat + r * Math.sin(angle),
-      lng: clng + (r * Math.cos(angle)) / Math.cos((clat * Math.PI) / 180),
-      placeholder: true
-    };
+  /* ---------- Google Maps links ---------- */
+  function hasLocation(store) {
+    return store.location && store.location.lat != null && store.location.lng != null;
   }
 
-  function popupHtml(store, stats, placeholder) {
-    return `
-      <div class="popup">
-        <h4>${escapeHtml(store.name)}</h4>
-        ${placeholder ? `<span class="status-pill status-pill--warning">Placeholder location</span>` : ""}
-        <p><b>Address:</b> ${store.address ? escapeHtml(store.address) : "Not verified yet"}</p>
-        ${store.hours ? `<p><b>Hours:</b> ${escapeHtml(store.hours)}</p>` : ""}
-        ${store.phone ? `<p><b>Phone:</b> <a href="tel:${store.phone.replace(/\s/g, "")}">${escapeHtml(store.phone)}</a></p>` : ""}
-        ${placeholder ? "" : `<p><a href="https://www.google.com/maps/dir/?api=1&destination=${store.location.lat},${store.location.lng}" target="_blank" rel="noopener">Get directions</a></p>`}
-        <p><b>${stats.listed}</b> of ${DATA.products.length} products listed · cheapest on <b>${stats.cheapest}</b></p>
-        <p>On average ${stats.avgPremium < 0.5 ? "at the lowest price" : `<b>${pct(stats.avgPremium, 1)}</b> above the lowest price`}</p>
-        <p class="muted" style="font-size:0.78rem">Example prices · updated ${shortDate(stats.latest)}</p>
-        <button class="btn-primary" type="button" data-view-store="${store.id}">View products from this store</button>
+  /** Opens the store's real listing in Google Maps (app on phones). */
+  function googleMapsUrl(store) {
+    const query = encodeURIComponent(`${store.name}, ${store.address || city.name}`);
+    const place = store.placeId ? `&query_place_id=${encodeURIComponent(store.placeId)}` : "";
+    return `https://www.google.com/maps/search/?api=1&query=${query}${place}`;
+  }
+
+  /** Turn-by-turn directions from the visitor's current location. */
+  function directionsUrl(store) {
+    const dest = hasLocation(store) ? `${store.location.lat},${store.location.lng}` : encodeURIComponent(`${store.name}, ${city.name}`);
+    const place = store.placeId ? `&destination_place_id=${encodeURIComponent(store.placeId)}` : "";
+    return `https://www.google.com/maps/dir/?api=1&destination=${dest}${place}`;
+  }
+
+  function embedUrl(store) {
+    if (!store) {
+      const [lat, lng] = city.center;
+      return `https://maps.google.com/maps?q=${encodeURIComponent("supermarkets in " + city.name + ", Kosovo")}&ll=${lat},${lng}&z=14&hl=en&output=embed`;
+    }
+    const q = hasLocation(store) ? `${store.location.lat},${store.location.lng}` : encodeURIComponent(`${store.name}, ${city.name}`);
+    return `https://maps.google.com/maps?q=${q}&z=17&hl=en&output=embed`;
+  }
+
+  /* ---------- Selected store details ---------- */
+  function renderDetails(store) {
+    if (!store) {
+      els.details.innerHTML = `
+        <div class="map-details__empty">
+          <svg class="ico"><use href="#i-pin"/></svg>
+          <p>Choose a store from the list to see it on the map, get its address and open directions in Google Maps.</p>
+        </div>`;
+      return;
+    }
+    const stats = storeStats(store.id);
+    els.details.innerHTML = `
+      <div class="map-details__head">
+        <span class="store-badge">${store.initials}</span>
+        <div style="min-width:0">
+          <h3 class="map-details__name">${escapeHtml(store.name)}</h3>
+          <p class="map-details__meta">${escapeHtml(store.address || city.name)}${store.hours ? " · " + escapeHtml(store.hours) : ""}${store.phone ? ` · <a href="tel:${store.phone.replace(/\s/g, "")}">${escapeHtml(store.phone)}</a>` : ""}</p>
+        </div>
+        <button class="map-details__close" type="button" data-map-overview aria-label="Show all stores">All stores</button>
+      </div>
+      <p class="map-details__stats"><b>${stats.listed}</b> of ${DATA.products.length} products listed · cheapest on <b>${stats.cheapest}</b> · ${stats.avgPremium < 0.5 ? "at the lowest price on average" : `on average <b>${pct(stats.avgPremium, 1)}</b> above the lowest price`} <span class="muted">(example prices, ${shortDate(stats.latest)})</span></p>
+      <div class="map-details__actions">
+        <a class="btn-primary" href="${directionsUrl(store)}" target="_blank" rel="noopener">Get directions</a>
+        <a class="btn-secondary" href="${googleMapsUrl(store)}" target="_blank" rel="noopener">Open in Google Maps</a>
+        <button class="btn-secondary" type="button" data-view-store="${store.id}">View products</button>
       </div>`;
   }
 
@@ -71,7 +95,8 @@
         <span class="store-badge">${store.initials}</span>
         <div style="min-width:0">
           <div class="store-item__name">${escapeHtml(store.name)}</div>
-          <div class="store-item__meta">${store.location.verified ? escapeHtml(store.address || "Address pending") : "Location not verified"}${store.hours ? " · " + escapeHtml(store.hours) : ""} · cheapest on ${stats.cheapest}</div>
+          <div class="store-item__meta">${escapeHtml(store.address || city.name)}${store.hours ? " · " + escapeHtml(store.hours) : ""}</div>
+          <a class="store-item__link" href="${googleMapsUrl(store)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>
         </div>
         <div class="store-item__index${stats.avgPremium === minPremium ? " is-low" : ""}">
           <b>${stats.avgPremium < 0.5 ? "Lowest" : "+" + pct(stats.avgPremium, 1)}</b>
@@ -81,75 +106,28 @@
   }
 
   /* ---------- Map ---------- */
-  function buildMap() {
-    if (typeof window.L === "undefined") {
-      els.map.innerHTML = "";
-      els.map.style.minHeight = "200px";
-      els.fallback.hidden = false;
-      els.fallback.textContent = "The map library couldn't load. Use the store list to browse stores.";
-      return;
-    }
-    map = L.map(els.map, { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView(city.center, 14);
-    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
-
-    let loaded = 0, failed = 0;
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-    })
-      .on("tileload", () => { loaded++; els.fallback.hidden = true; })
-      .on("tileerror", () => {
-        failed++;
-        if (!loaded && failed >= 4) {
-          els.fallback.hidden = false;
-          els.fallback.textContent = "Map tiles couldn't load here (offline or blocked). Use the store list to browse stores.";
-        }
-      })
-      .addTo(map);
-
-    const stores = DATA.stores.filter((s) => s.cityId === city.id);
-    stores.forEach((store, i) => {
-      const pos = positionFor(store, i, stores.length);
-      const stats = storeStats(store.id);
-      const marker = L.marker([pos.lat, pos.lng], {
-        title: store.name + (pos.placeholder ? " (placeholder location)" : ""),
-        icon: L.divIcon({
-          className: "store-marker",
-          html: `<div class="store-marker__pin"><span>${store.initials}</span></div>`,
-          iconSize: [38, 38],
-          iconAnchor: [19, 46],
-          popupAnchor: [0, -42]
-        })
-      }).addTo(map);
-      marker.bindPopup(popupHtml(store, stats, pos.placeholder), { maxWidth: 260, minWidth: 220 });
-      marker.on("popupopen", () => setActive(store.id));
-      markers[store.id] = marker;
-    });
-
-    // Zoom so every store is visible.
-    const all = Object.values(markers).map((m) => m.getLatLng());
-    if (all.length > 1) map.fitBounds(L.latLngBounds(all), { padding: [30, 30], maxZoom: 15 });
-
-    // Fix sizing if the map container changes (e.g. resize, layout shift).
-    if ("ResizeObserver" in window) new ResizeObserver(() => map.invalidateSize()).observe(els.map);
+  function showOnMap(store) {
+    els.frame.src = embedUrl(store);
+    els.frame.title = store ? `Google Map showing ${store.name}` : `Google Map of supermarkets in ${city.name}`;
+    renderDetails(store);
   }
 
   function setActive(id) {
     activeId = id;
-    Object.entries(markers).forEach(([sid, m]) => {
-      const el = m.getElement();
-      if (el) el.classList.toggle("is-active", sid === id);
-    });
     els.list.querySelectorAll(".store-item").forEach((li) => li.classList.toggle("is-active", li.dataset.store === id));
   }
 
   function focusStore(id, scroll) {
     if (scroll) document.getElementById("stores").scrollIntoView({ behavior: "smooth" });
+    const store = DATA.stores.find((s) => s.id === id);
+    if (!store) return;
     setActive(id);
-    const m = markers[id];
-    if (m && map) {
-      setTimeout(() => { map.flyTo(m.getLatLng(), 15, { duration: 0.6 }); m.openPopup(); }, scroll ? 450 : 0);
-    }
+    showOnMap(store);
+  }
+
+  function showOverview() {
+    setActive(null);
+    showOnMap(null);
   }
 
   function viewStoreProducts(id) {
@@ -158,18 +136,22 @@
   }
 
   function init() {
-    els.map = $("#map");
+    els.frame = $("#map-frame");
+    els.details = $("#map-details");
     els.list = $("#store-list");
-    els.fallback = $("#map-fallback");
     renderList();
-    buildMap();
+    showOverview();
 
     els.list.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return; // let "Open in Google Maps" links work normally
       const li = e.target.closest(".store-item");
       if (li) focusStore(li.dataset.store, window.innerWidth <= 1024);
     });
     els.list.addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && e.target.matches(".store-item")) { e.preventDefault(); focusStore(e.target.dataset.store, false); }
+    });
+    els.details.addEventListener("click", (e) => {
+      if (e.target.closest("[data-map-overview]")) showOverview();
     });
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-view-store]");
