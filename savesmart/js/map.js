@@ -163,8 +163,8 @@
     els.list = $("#store-list");
     els.fallback = $("#map-fallback");
     const citySelect = $("#city-select");
-    citySelect.innerHTML = DATA.cities.map((c) =>
-      `<option value="${c.id}" ${c.active ? "" : "disabled"} ${c.id === city.id ? "selected" : ""}>${escapeHtml(c.name)}${c.active ? "" : " (coming soon)"}</option>`).join("");
+    citySelect.innerHTML = DATA.cities.filter((c) => c.active).map((c) =>
+      `<option value="${c.id}" ${c.id === city.id ? "selected" : ""}>${escapeHtml(c.name)}</option>`).join("");
     citySelect.addEventListener("change", () => {
       const next = DATA.cities.find((c) => c.id === citySelect.value);
       if (next && next.active) { city = next; storage.set("city", city.id); }

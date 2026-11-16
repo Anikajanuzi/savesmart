@@ -23,9 +23,7 @@ window.SS_DATA = {
   dataLastUpdated: "2026-11-06",
 
   cities: [
-    { id: "mitrovica", name: "Mitrovica", country: "Kosovo", center: [42.8914, 20.866], active: true },
-    { id: "prishtina", name: "Prishtina", country: "Kosovo", center: [42.6629, 21.1655], active: false },
-    { id: "peja", name: "Peja", country: "Kosovo", center: [42.6593, 20.2883], active: false }
+    { id: "mitrovica", name: "Mitrovica", country: "Kosovo", center: [42.8914, 20.866], active: true }
   ],
 
   categories: [
