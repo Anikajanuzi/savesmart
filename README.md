@@ -68,7 +68,7 @@ Keys are prefixed `savesmart.v1.`: `basket`, `budget`, `expenses`,
 
 ```js
 {
-  id: 1, name: "Fresh Milk 3.2%", brand: "Local Dairy", category: "food",
+  id: 1, name: "Fresh Milk 3.2%", brand: "Local Dairy", category: "fresh",
   quantity: "1 L", unitSize: { amount: 1, unit: "L" },
   image: null,                 // set a photo URL; the illustration is the fallback
   art: { shape: "carton", color: "#5E7FA3", label: "MILK" },
@@ -79,6 +79,9 @@ Keys are prefixed `savesmart.v1.`: `basket`, `budget`, `expenses`,
 ```
 
 - **New product:** add an object to `products`. Leave a store out of `prices` if it doesn't sell it.
+- **Catalog contents:** 102 demo products in 7 categories (Fresh food, Pantry, Drinks,
+  Snacks, Household, Personal care, Stationery). Products 28–102 carry a `sku`
+  (e.g. `F001`, `ST015`) from the SaveSmart student catalog and are priced at 7 stores.
 - **New store:** add it to `stores`, then add its prices.
 - **Verified store location:** set `location: { lat, lng, verified: true }` and
   `address`. The marker moves from the placeholder ring to the real position and
